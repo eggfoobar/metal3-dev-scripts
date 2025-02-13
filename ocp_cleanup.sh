@@ -43,10 +43,6 @@ fi
 if test -f assets/templates/98_worker-chronyd-redhat.yaml ; then
     rm -f assets/templates/98_worker-chronyd-redhat.yaml
 fi
-if test -f assets/templates/98_arbiter-chronyd-redhat.yaml ; then
-    rm -f assets/templates/98_arbiter-chronyd-redhat.yaml
-fi
-
 
 # If the installer fails before terraform completes the destroy bootstrap
 # cleanup doesn't clean up the VM/volumes created..

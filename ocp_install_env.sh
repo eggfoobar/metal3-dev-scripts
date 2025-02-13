@@ -181,14 +181,14 @@ EOF
     fi
 }
 
-function arbiterNodeStanza() {
-    if [[ "$NUM_ARBITERS" -gt "0" ]]; then
+function arbiterStanza() {
+    if [[ ! -z "${ENABLE_ARBITER_NODE:-}" ]]; then
 cat <<EOF
 arbiter:
-  architecture: amd64
-  hyperthreading: Enabled
-  replicas: ${NUM_ARBITERS}
   name: arbiter
+  replicas: 1
+  hyperthreading: Enabled
+  architecture: $(get_arch install_config)
   platform:
     baremetal: {}
 EOF
@@ -328,7 +328,7 @@ controlPlane:
   architecture: $(get_arch install_config)
   platform:
     baremetal: {}
-$(arbiterNodeStanza)
+$(arbiterStanza)
 $(featureSet)
 platform:
   baremetal:
@@ -347,14 +347,12 @@ EOF
   if [ -z "${HOSTS_SWAP_DEFINITION:-}" ]; then
     cat >> "${outdir}/install-config.yaml" << EOF
 $(node_map_to_install_config_hosts $NUM_MASTERS 0 master)
-$(node_map_to_install_config_hosts $NUM_WORKERS $(($NUM_MASTERS + $NUM_ARBITERS)) worker)
-$(node_map_to_install_config_hosts $NUM_ARBITERS $NUM_MASTERS arbiter)
+$(node_map_to_install_config_hosts $NUM_WORKERS $NUM_MASTERS worker)
 EOF
   else
     cat >> "${outdir}/install-config.yaml" << EOF
-$(node_map_to_install_config_hosts $NUM_WORKERS $(($NUM_MASTERS + $NUM_ARBITERS)) worker)
+$(node_map_to_install_config_hosts $NUM_WORKERS $NUM_MASTERS worker)
 $(node_map_to_install_config_hosts $NUM_MASTERS 0 master)
-$(node_map_to_install_config_hosts $NUM_ARBITERS $NUM_MASTERS arbiter)
 EOF
   fi
 

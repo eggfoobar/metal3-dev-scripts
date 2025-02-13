@@ -5,11 +5,14 @@
 # openshift-installer terraform templates
 ironic_prefix: "{{ ironic_prefix }}"
 
+# Helper var to alter the number of masters being deployed and create an arbiter flavor node
+arbiter_enabled: "{{ lookup('env', 'ENABLE_ARBITER_NODE') | default(false) }}"
+
 # We enable more memory and masters in dev-scripts compared to the minimal setup
 # in metal3-dev-env
 num_masters: 3
-num_arbiters: 0
 num_workers: 1
+num_arbiters: "{{ 1 if arbiter_enabled else 0 }}"
 num_extraworkers: 0
 extradisks_list: "{{ lookup('env', 'VM_EXTRADISKS_LIST').split(' ') | default(['vdb']) }}"
 extradisks_size: "{{ lookup('env', 'VM_EXTRADISKS_SIZE') | default(['8G']) }}"
