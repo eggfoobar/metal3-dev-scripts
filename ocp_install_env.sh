@@ -181,6 +181,35 @@ EOF
     fi
 }
 
+function controlPlaneStanza() {
+  local num=${NUM_MASTERS}
+  if [[ "$ENABLE_ARBITER" != "false" ]]; then
+    num=$((NUM_MASTERS - 1))
+  fi
+cat <<EOF
+controlPlane:
+  name: master
+  replicas: ${num}
+  architecture: $(get_arch install_config)
+  platform:
+    baremetal: {}
+EOF
+}
+
+function arbiterStanza() {
+    if [[ "$ENABLE_ARBITER" != "false" ]]; then
+cat <<EOF
+arbiter:
+  name: arbiter
+  replicas: 1
+  hyperthreading: Enabled
+  architecture: $(get_arch install_config)
+  platform:
+    baremetal: {}
+EOF
+    fi
+}
+
 function libvirturi() {
     if [[ "$REMOTE_LIBVIRT" -ne 0 ]]; then
 cat <<EOF
@@ -308,12 +337,8 @@ compute:
 - name: worker
   replicas: $NUM_WORKERS
   architecture: $(get_arch install_config)
-controlPlane:
-  name: master
-  replicas: ${NUM_MASTERS}
-  architecture: $(get_arch install_config)
-  platform:
-    baremetal: {}
+$(controlPlaneStanza)
+$(arbiterStanza)
 $(featureSet)
 platform:
   baremetal:

@@ -227,6 +227,11 @@ function node_map_to_install_config_hosts() {
     for ((idx=$start_idx;idx<$(($1 + $start_idx));idx++)); do
       name=$(node_val ${idx} "name")
       mac=$(node_val ${idx} "ports[0].address")
+      local host_role=$role
+      local host_name=$name
+      if [[ "$ENABLE_ARBITER" != "false" && $idx -eq $(($num_hosts + $start_idx - 1)) ]]; then
+        host_role=arbiter
+      fi
 
       driver=$(node_val ${idx} "driver")
       if [ $driver == "ipmi" ] ; then
@@ -247,7 +252,7 @@ function node_map_to_install_config_hosts() {
 
       cat << EOF
       - name: ${name}
-        role: ${role}
+        role: ${host_role}
         bmc:
           address: ${address}
           username: ${username}
@@ -266,7 +271,7 @@ EOF
         # FIXME(stbenjam) Worker code in installer should accept
         # "default" as well -- currently the mapping doesn't work,
         # so we use the raw value for BMO's default which is "unknown"
-        if [[ "$role" == "master" ]]; then
+        if [[ "$role" == "master" ]] || [[ "$host_role" == "arbiter" ]] ; then
             if [ -z "${MASTER_HARDWARE_PROFILE:-}" ]; then
                 cat <<EOF
         rootDeviceHints:
