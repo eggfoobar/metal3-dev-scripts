@@ -195,6 +195,14 @@ EOF
     fi
 }
 
+function workloadStanza() {
+  if [[ ! -z "${ENABLE_WORKLOAD_PARTITIONING}" ]]; then
+cat <<EOF
+cpuPartitioningMode: AllNodes
+EOF
+  fi
+}
+
 function libvirturi() {
     if [[ "$REMOTE_LIBVIRT" -ne 0 ]]; then
 cat <<EOF
@@ -313,6 +321,7 @@ function generate_ocp_install_config() {
     cat > "${outdir}/install-config.yaml" << EOF
 apiVersion: v1
 baseDomain: ${BASE_DOMAIN}
+$(workloadStanza)
 networking:
   networkType: ${NETWORK_TYPE}
 $(cluster_network)
