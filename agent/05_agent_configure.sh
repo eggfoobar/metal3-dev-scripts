@@ -65,7 +65,7 @@ function configure_node() {
   fi
   if [[ "$node_type" == "arbiter" ]]; then
     local hostname="$(printf "${ARBITER_HOSTNAME_FORMAT}" "${node_num}")"
-    local ip=$((base_ip + ${NUM_MASTERS} + node_num))
+    local ip=$((base_ip + ${NUM_MASTERS} + ${NUM_WORKERS} + node_num))
   fi
   if [[ "$node_type" == "extraworker" ]]; then
     local hostname="$(printf "${EXTRA_WORKER_HOSTNAME_FORMAT}" "${node_num}")"

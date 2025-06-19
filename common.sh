@@ -466,7 +466,7 @@ if [[ ! -z ${AGENT_E2E_TEST_SCENARIO} ]]; then
           export ARBITER_VCPU=2
           export ARBITER_MEMORY=16384
           export ARBITER_DISK=100
-          export NUM_WORKERS=0
+          #export NUM_WORKERS=0
           ;;
       "HA" )
           export NUM_MASTERS=3
