@@ -478,7 +478,7 @@ function image_mirror_config {
             TAGGED=$(echo $MIRRORED_RELEASE_IMAGE | sed -e 's/release://')
             RELEASE=$(echo $MIRRORED_RELEASE_IMAGE | grep -o 'registry.ci.openshift.org[^":\@]\+')
             cat << EOF
-imageContentSources:
+imageDigestSources:
 - mirrors:
     - ${LOCAL_REGISTRY_DNS_NAME}:${LOCAL_REGISTRY_PORT}/localimages/local-release-image
   source: ${RELEASE}
