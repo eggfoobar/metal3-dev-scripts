@@ -521,7 +521,7 @@ if [[ ! -z ${AGENT_E2E_TEST_SCENARIO} ]]; then
           ;;
       "SNO" )
           export NUM_MASTERS=1
-          export MASTER_VCPU=8
+          export MASTER_VCPU=4
           export MASTER_DISK=100
           export MASTER_MEMORY=32768
           export NUM_WORKERS=0
